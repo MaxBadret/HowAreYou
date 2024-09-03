@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Mime;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityStandardAssets.ImageEffects;
 
 public class InsideMenuController : MonoBehaviour
 {
@@ -12,21 +14,24 @@ public class InsideMenuController : MonoBehaviour
     public bool isOpen = false;
     public bool isSaveOpen = false;
 
-    public string dangertext = "мы ещё не закончили, так что не надо уходить от разговора";
     public string currentText = "";
-    public float typewriterSpeed = 0.2f;
-    public Text textComponent;
+    public float typewriterSpeed = 0.01f;
+    public string dangertext = "- Мы ещё не закончили говорить. \n- Так о чём это мы…";
     public GameObject exitMenuButton;
-    public GameObject textExit;
-    public Text exitText;
+    public GameObject textPanel;
+    public Text textMob;
+    
+    private TextMeshPro quitText;
+    private string exit = "Выйти";
+    [SerializeField] private GameObject exitButton;
     
     private void Start()
     {
         menu.SetActive(isOpen);
         saveMenu.SetActive(false);
         GameObject textGameObject = GameObject.Find("Text mob");
-        textComponent = textGameObject.GetComponent<Text>();
-        exitText = textExit.GetComponent<Text>();
+        quitText = exitButton.GetComponent<TextMeshPro>();
+        textMob = textPanel.GetComponent<Text>();
     }
 
     void Update()
@@ -68,7 +73,6 @@ public class InsideMenuController : MonoBehaviour
         isOpen = false;
         StartCoroutine(TypewriterCoroutine());
         exitMenuButton.SetActive(false);
-        exitText.text = "Выйти";
     }
     
     private IEnumerator TypewriterCoroutine()
@@ -76,8 +80,9 @@ public class InsideMenuController : MonoBehaviour
         foreach (char character in dangertext)
         {
             currentText += character;
-            textComponent.text= currentText;
+            textMob.text= currentText;
             yield return new WaitForSeconds(typewriterSpeed);
+            yield return null;
         }
     }
 }
